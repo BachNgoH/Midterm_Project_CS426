@@ -13,7 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mobile_midtermproject.R
-import com.example.mobile_midtermproject.ui.components.FilterView
 import com.example.mobile_midtermproject.ui.components.FlightSearchView
 
 @Composable
@@ -34,7 +33,9 @@ fun BookingsScreen() {
             onBackPressed = { currentView = BookingView.TransportDetails },
             onFilterPressed = { currentView = BookingView.Filter }
         )
-        is BookingView.Filter -> FilterView()
+        is BookingView.Filter -> FilterView(
+            onBackPressed = { currentView = BookingView.SearchDetails }
+        )
         else -> {}
     }
 }

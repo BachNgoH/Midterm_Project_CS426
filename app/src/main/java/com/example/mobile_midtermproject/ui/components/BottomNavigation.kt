@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.mobile_midtermproject.ui.screens.ProfileScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,7 +41,7 @@ fun MainNavigation() {
             composable(Screen.Home.route) { HomeScreen() }
             composable(Screen.Bookings.route) { BookingsScreen() }
             composable(Screen.Notifications.route) { NotificationsScreen() }
-//            composable(Screen.Profile.route) { ProfileScreen() }
+            composable(Screen.Profile.route) { ProfileScreen() }
         }
     }
 }
