@@ -21,15 +21,15 @@ fun MainNavigation() {
     val navController = rememberNavController()
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Travel App") },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            )
-        },
+//        topBar = {
+//            CenterAlignedTopAppBar(
+//                title = { Text("Travel App") },
+//                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+//                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+//                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+//                )
+//            )
+//        },
         bottomBar = { BottomNav(navController) }
     ) { innerPadding ->
         NavHost(

@@ -4,6 +4,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -17,7 +18,10 @@ import com.example.mobile_midtermproject.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TransportDetailsView(onBackPressed: () -> Unit) {
+fun TransportDetailsView(
+    onBackPressed: () -> Unit,
+    onSearch: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +57,7 @@ fun TransportDetailsView(onBackPressed: () -> Unit) {
             TransportType()
 
             Button(
-                onClick = { /* Handle search */ },
+                onClick = onSearch,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
@@ -164,16 +168,16 @@ fun TransportType() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             IconButton(onClick = { /* Handle plane */ }) {
-                Icons.Default.Home
+                Icon(Icons.Default.Done, contentDescription = "plan")
             }
             IconButton(onClick = { /* Handle ship */ }) {
-                Icons.Default.Home
+                Icon(Icons.Default.Done, contentDescription = "ship")
             }
             IconButton(onClick = { /* Handle train */ }) {
-                Icons.Default.Home
+                Icon(Icons.Default.Done, contentDescription = "train")
             }
             IconButton(onClick = { /* Handle bus */ }) {
-                Icons.Default.Home
+                Icon(Icons.Default.Done, contentDescription = "bus")
 
             }
         }
