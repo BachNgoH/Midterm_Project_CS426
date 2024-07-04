@@ -1,6 +1,8 @@
 package com.example.mobile_midtermproject.ui.screens
 
+import PersonalInformationScreen
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -11,6 +13,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +30,16 @@ import com.example.mobile_midtermproject.R
 
 @Composable
 fun ProfileScreen() {
+    var currentView by remember { mutableStateOf<ProfileView>(ProfileView.Main) }
+
+    when (currentView) {
+        is ProfileView.Main -> MainProfileScreen(onOptionSelected = { currentView = it })
+        is ProfileView.PersonalInfo -> PersonalInformationScreen(onBackClick = { currentView = ProfileView.Main })
+    }
+}
+
+@Composable
+fun MainProfileScreen(onOptionSelected: (ProfileView) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,7 +47,7 @@ fun ProfileScreen() {
     ) {
         AccountHeader()
         Spacer(modifier = Modifier.height(24.dp))
-        AccountOptions()
+        AccountOptions(onOptionSelected)
         Spacer(modifier = Modifier.weight(1f))
         EndSessionButton()
     }
@@ -70,25 +86,32 @@ fun AccountHeader() {
 }
 
 @Composable
-fun AccountOptions() {
-    AccountOption(icon = Icons.Default.Person, text = "Personal information")
-    AccountOption(icon = Icons.Default.ShoppingCart, text = "Payment and cards")
-    AccountOption(icon = Icons.Default.Favorite, text = "Saved")
-    AccountOption(icon = Icons.Default.AccountBox, text = "Booking history")
-    AccountOption(icon = Icons.Default.Settings, text = "Settings")
+fun AccountOptions(onOptionSelected: (ProfileView) -> Unit) {
+    AccountOption(Icons.Default.Person, "Personal information") { onOptionSelected(ProfileView.PersonalInfo) }
+    AccountOption(Icons.Default.ShoppingCart, "Payment and cards") { onOptionSelected(ProfileView.PersonalInfo) }
+    AccountOption(Icons.Default.Favorite, "Saved") { onOptionSelected(ProfileView.PersonalInfo) }
+    AccountOption(Icons.Default.AccountBox, "Booking history") { onOptionSelected(ProfileView.PersonalInfo) }
+    AccountOption(Icons.Default.Settings, "Settings") { onOptionSelected(ProfileView.PersonalInfo) }
 }
-
 @Composable
-fun AccountOption(icon: ImageVector, text: String) {
+fun AccountOption(icon: ImageVector, text: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(imageVector = icon, contentDescription = null)
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary
+        )
         Spacer(modifier = Modifier.width(16.dp))
-        Text(text = text)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
 
@@ -101,4 +124,9 @@ fun EndSessionButton() {
     ) {
         Text("End session")
     }
+}
+
+sealed class ProfileView {
+    object Main : ProfileView()
+    object PersonalInfo : ProfileView()
 }
