@@ -7,17 +7,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun TopAppBar(title: String) {
-//    CenterAlignedTopAppBar(
-//        title = { Text(title) },
-//        colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-//            containerColor = MaterialTheme.colorScheme.background
-//        )
-//    )
-//}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar() {
