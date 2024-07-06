@@ -17,6 +17,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+data class Passenger(
+    val name: String,
+    val ticketNumber: String,
+    val ticketClass: String,
+    val seatNumber: String
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SeatSelectionView(
