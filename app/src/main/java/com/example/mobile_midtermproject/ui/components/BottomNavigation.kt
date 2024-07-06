@@ -4,6 +4,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -14,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.mobile_midtermproject.ui.screens.ProfileScreen
+import com.example.mobile_midtermproject.ui.theme.ActionColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,8 +54,11 @@ fun BottomNav(navController: NavHostController) {
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+//        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+//        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        containerColor = Color.White,
+        contentColor = ActionColor
+
     ) {
         Screen.values().forEach { screen ->
             NavigationBarItem(
@@ -72,7 +77,7 @@ fun BottomNav(navController: NavHostController) {
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    indicatorColor = ActionColor,
                     unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
                 )

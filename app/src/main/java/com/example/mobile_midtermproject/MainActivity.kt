@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -52,6 +53,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MaterialTheme (typography = customTypography) {
                 Surface(color = MaterialTheme.colorScheme.background) {
+//                Surface(color = Color(0xFFB12626)) {
                     MainNavigation()
                 }
             }

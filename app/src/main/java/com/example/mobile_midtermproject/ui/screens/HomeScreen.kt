@@ -5,13 +5,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.example.mobile_midtermproject.R
+import com.example.mobile_midtermproject.ui.theme.PrimaryColor
 
 @Composable
 fun HomeScreen(navController : NavHostController) {
@@ -54,7 +57,15 @@ fun BookingServices(navController: NavHostController) {
             ServiceItem(
                 "Transport",
                 ImageVector.vectorResource(id = R.drawable.plane_icon),
-                onClick = { navController.navigate(Screen.Bookings.route)})
+                onClick = {
+                    navController.navigate(Screen.Bookings.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                })
             ServiceItem(
                 "Events",
                 ImageVector.vectorResource(id = R.drawable.events_icon),
@@ -71,14 +82,15 @@ fun ServiceItem(text: String, icon: ImageVector, onClick: () -> Unit) {
     ) {
         Card(
             modifier = Modifier.size(64.dp),
-            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+//            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
+            colors = CardDefaults.cardColors(containerColor = PrimaryColor),
             shape = MaterialTheme.shapes.medium,
             onClick = onClick
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = text,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                tint = Color.White, // MaterialTheme.colorScheme.onPrimaryContainer,
                 modifier = Modifier
                     .padding(16.dp)
                     .size(32.dp)
