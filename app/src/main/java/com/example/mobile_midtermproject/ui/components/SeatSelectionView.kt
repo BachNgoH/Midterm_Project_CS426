@@ -28,7 +28,8 @@ data class Passenger(
 @Composable
 fun SeatSelectionView(
     onBackPressed: () -> Unit,
-    flight: Flight
+    flight: Flight,
+    onContinue: (flight: Flight) -> Unit,
 ) {
     var selectedSeat by remember { mutableStateOf("") }
     var totalPrice by remember { mutableStateOf(50.00) }
@@ -59,7 +60,7 @@ fun SeatSelectionView(
                 // Update price logic here
             })
             Spacer(modifier = Modifier.weight(1f))
-            BottomInfo(selectedSeat, totalPrice)
+            BottomInfo(selectedSeat, totalPrice, onContinue = { onContinue(flight) })
         }
     }
 }
@@ -154,7 +155,7 @@ fun SeatItem(
 }
 
 @Composable
-fun BottomInfo(selectedSeat: String, totalPrice: Double) {
+fun BottomInfo(selectedSeat: String, totalPrice: Double, onContinue: () -> Unit) {
     Column {
         Row(
             Modifier.fillMaxWidth(),
@@ -172,7 +173,7 @@ fun BottomInfo(selectedSeat: String, totalPrice: Double) {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { /* Handle continue */ },
+            onClick = onContinue,
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
         ) {

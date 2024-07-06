@@ -26,7 +26,7 @@ import com.example.mobile_midtermproject.R
 @Composable
 fun BoardingPassView(
     flight: Flight,
-    passengers: List<Passenger>,
+//    passengers: List<Passenger>,
     onBackPressed: () -> Unit
 ) {
     Scaffold(
@@ -52,10 +52,10 @@ fun BoardingPassView(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            passengers.forEach { passenger ->
-                BoardingPass(flight, passenger)
-                Spacer(modifier = Modifier.height(24.dp))
-            }
+//            passengers.forEach { passenger ->
+//                BoardingPass(flight, passenger)
+//                Spacer(modifier = Modifier.height(24.dp))
+//            }
             DownloadTicketButton()
         }
     }
