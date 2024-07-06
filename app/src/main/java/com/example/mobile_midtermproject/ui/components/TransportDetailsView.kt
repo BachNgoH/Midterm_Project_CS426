@@ -1,11 +1,14 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mobile_midtermproject.R
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransportDetailsView(
@@ -25,10 +33,17 @@ fun TransportDetailsView(
     onSearch: () -> Unit
 ) {
     val cities = listOf("New York (NYC)", "London (LDN)", "Paris (PAR)", "Tokyo (TYO)", "Sydney (SYD)")
+
     var fromCity by remember { mutableStateOf(cities[0]) }
     var toCity by remember { mutableStateOf(cities[1]) }
+    var departureDate by remember { mutableStateOf(LocalDate.now()) }
+    var returnDate by remember { mutableStateOf(LocalDate.now().plusDays(7)) }
+
     var fromExpanded by remember { mutableStateOf(false) }
     var toExpanded by remember { mutableStateOf(false) }
+
+    var showDepartureDatePicker by remember { mutableStateOf(false) }
+    var showReturnDatePicker by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -99,11 +114,81 @@ fun TransportDetailsView(
                 )
             }
 
-            // Rest of the content...
             Row(modifier = Modifier.fillMaxWidth()) {
-                DateField("Departure", "Jun 02, 2022", Modifier.weight(1f))
+                DateField(
+                    label = "Departure",
+                    date = departureDate,
+                    onDateClick = { showDepartureDatePicker = true },
+                    modifier = Modifier.weight(1f)
+                )
                 Spacer(modifier = Modifier.width(16.dp))
-                DateField("Return", "Jun 12, 2022", Modifier.weight(1f))
+                DateField(
+                    label = "Return",
+                    date = returnDate,
+                    onDateClick = { showReturnDatePicker = true },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            if (showDepartureDatePicker) {
+                val datePickerState = rememberDatePickerState(
+                    initialSelectedDateMillis = departureDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                    yearRange = IntRange(LocalDate.now().year, LocalDate.now().year + 2)
+                )
+                DatePickerDialog(
+                    onDismissRequest = { showDepartureDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showDepartureDatePicker = false
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                departureDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                                if (departureDate.isAfter(returnDate)) {
+                                    returnDate = departureDate.plusDays(1)
+                                }
+                            }
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDepartureDatePicker = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState,
+                    )
+                }
+            }
+
+            if (showReturnDatePicker) {
+                val datePickerState = rememberDatePickerState(
+                    initialSelectedDateMillis = returnDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                    yearRange = IntRange(LocalDate.now().year, LocalDate.now().year + 2)
+                )
+                DatePickerDialog(
+                    onDismissRequest = { showReturnDatePicker = false },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showReturnDatePicker = false
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                returnDate = Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate()
+                            }
+                        }) {
+                            Text("OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showReturnDatePicker = false }) {
+                            Text("Cancel")
+                        }
+                    }
+                ) {
+                    DatePicker(
+                        state = datePickerState,
+                    )
+                }
             }
 
             PassengerAndLuggage()
@@ -167,11 +252,32 @@ fun CityDropdown(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DateField(label: String, value: String, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.padding(vertical = 8.dp)) {
+fun DateField(
+    label: String,
+    date: LocalDate,
+    onDateClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.clickable(onClick = onDateClick)) {
         Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
-        Text(value, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 4.dp)
+        ) {
+            Text(
+                text = date.format(DateTimeFormatter.ofPattern("MMM dd, yyyy")),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "Select date",
+                tint = Color(0xFFFFA500)
+            )
+        }
         Divider(modifier = Modifier.padding(top = 8.dp))
     }
 }
@@ -213,7 +319,6 @@ fun PassengerAndLuggage() {
                 )
             }
         }
-        Divider(modifier = Modifier.padding(top = 8.dp))
     }
 }
 
