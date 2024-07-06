@@ -9,10 +9,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import com.example.mobile_midtermproject.R
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController : NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -25,12 +27,12 @@ fun HomeScreen() {
         Spacer(modifier = Modifier.height(16.dp))
         SearchBar()
         Spacer(modifier = Modifier.height(24.dp))
-        BookingServices()
+        BookingServices(navController)
     }
 }
 
 @Composable
-fun BookingServices() {
+fun BookingServices(navController: NavHostController) {
     Column {
         Text(
             text = "Booking Services",
@@ -41,23 +43,37 @@ fun BookingServices() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ServiceItem("Trips",  ImageVector.vectorResource(id = R.drawable.earth_icon))
-            ServiceItem("Hotel", ImageVector.vectorResource(id = R.drawable.hotel_icon))
-            ServiceItem("Transport", ImageVector.vectorResource(id = R.drawable.plane_icon))
-            ServiceItem("Events", ImageVector.vectorResource(id = R.drawable.events_icon))
+            ServiceItem(
+                "Trips",
+                ImageVector.vectorResource(id = R.drawable.earth_icon),
+                onClick = { navController.navigate(Screen.Home.route)})
+            ServiceItem(
+                "Hotel",
+                ImageVector.vectorResource(id = R.drawable.hotel_icon),
+                onClick = { navController.navigate(Screen.Home.route)})
+            ServiceItem(
+                "Transport",
+                ImageVector.vectorResource(id = R.drawable.plane_icon),
+                onClick = { navController.navigate(Screen.Bookings.route)})
+            ServiceItem(
+                "Events",
+                ImageVector.vectorResource(id = R.drawable.events_icon),
+                onClick = { navController.navigate(Screen.Home.route)}
+            )
         }
     }
 }
 
 @Composable
-fun ServiceItem(text: String, icon: ImageVector) {
+fun ServiceItem(text: String, icon: ImageVector, onClick: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
             modifier = Modifier.size(64.dp),
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            onClick = onClick
         ) {
             Icon(
                 imageVector = icon,
