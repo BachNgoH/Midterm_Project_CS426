@@ -29,6 +29,9 @@ fun BoardingPassView(
 //    passengers: List<Passenger>,
     onBackPressed: () -> Unit
 ) {
+    var passengers = List<Passenger>(2) {
+        Passenger(name = "John Doe", ticketNumber = "AL100", ticketClass = "Economic", seatNumber = "15A")
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -52,10 +55,10 @@ fun BoardingPassView(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-//            passengers.forEach { passenger ->
-//                BoardingPass(flight, passenger)
-//                Spacer(modifier = Modifier.height(24.dp))
-//            }
+            passengers.forEach { passenger ->
+                BoardingPass(flight, passenger)
+                Spacer(modifier = Modifier.height(24.dp))
+            }
             DownloadTicketButton()
         }
     }
