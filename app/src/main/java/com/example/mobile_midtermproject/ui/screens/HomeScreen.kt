@@ -6,12 +6,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.mobile_midtermproject.R
 
 @Composable
@@ -44,10 +41,10 @@ fun BookingServices() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ServiceItem("Trips", Icons.Default.Done)
-            ServiceItem("Hotel", Icons.Default.Done)
-            ServiceItem("Transport", Icons.Default.Done)
-            ServiceItem("Events", Icons.Default.FavoriteBorder)
+            ServiceItem("Trips",  ImageVector.vectorResource(id = R.drawable.earth_icon))
+            ServiceItem("Hotel", ImageVector.vectorResource(id = R.drawable.hotel_icon))
+            ServiceItem("Transport", ImageVector.vectorResource(id = R.drawable.plane_icon))
+            ServiceItem("Events", ImageVector.vectorResource(id = R.drawable.events_icon))
         }
     }
 }
