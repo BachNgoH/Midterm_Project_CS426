@@ -1,18 +1,23 @@
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -20,6 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mobile_midtermproject.R
+import com.example.mobile_midtermproject.ui.theme.MainGray
+import com.example.mobile_midtermproject.ui.theme.PrimaryColor
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -281,43 +288,76 @@ fun DateField(
         Divider(modifier = Modifier.padding(top = 8.dp))
     }
 }
-
 @Composable
 fun PassengerAndLuggage() {
+    var adultCount by remember { mutableStateOf(1) }
+    var childrenCount by remember { mutableStateOf(0) }
+    var petCount by remember { mutableStateOf(0) }
+    var luggageCount by remember { mutableStateOf(0) }
+
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
         Text("Passenger & Luggage", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        Spacer(modifier = Modifier.height(8.dp))
+
+        CounterInput(
+            label = "Adults",
+            count = adultCount,
+            onCountChange = { adultCount = it },
+            icon = R.drawable.ic_person
+        )
+
+        CounterInput(
+            label = "Children",
+            count = childrenCount,
+            onCountChange = { childrenCount = it },
+            icon = R.drawable.ic_children
+        )
+
+        CounterInput(
+            label = "Pets",
+            count = petCount,
+            onCountChange = { petCount = it },
+            icon = R.drawable.ic_pet
+        )
+
+        CounterInput(
+            label = "Luggage",
+            count = luggageCount,
+            onCountChange = { luggageCount = it },
+            icon = R.drawable.ic_luggage
+        )
+    }
+}
+
+@Composable
+fun CounterInput(
+    label: String,
+    count: Int,
+    onCountChange: (Int) -> Unit,
+    icon: Int
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = icon),
+            contentDescription = label,
+            modifier = Modifier.size(24.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(label, modifier = Modifier.weight(1f))
+        IconButton(
+            onClick = { if (count > 0) onCountChange(count - 1) },
+            enabled = count > 0
         ) {
-            IconButton(onClick = { /* Handle passengers */ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_person),
-                    contentDescription = "Passengers",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            IconButton(onClick = { /* Handle time */ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_children),
-                    contentDescription = "Time",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            IconButton(onClick = { /* Handle luggage */ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_pet),
-                    contentDescription = "Luggage",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-            IconButton(onClick = { /* Handle special items */ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_luggage),
-                    contentDescription = "Special Items",
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Decrease")
+        }
+        Text(count.toString(), style = MaterialTheme.typography.bodyLarge)
+        IconButton(onClick = { onCountChange(count + 1) }) {
+            Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Increase")
         }
     }
 }
@@ -350,18 +390,63 @@ fun TransportType() {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = { /* Handle plane */ }) {
-                Icon(Icons.Default.Done, contentDescription = "plan")
+            IconButton(
+                onClick = { /* Handle train */ },
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(PrimaryColor)) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_plane),
+                        contentDescription = "Airplane",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
-            IconButton(onClick = { /* Handle ship */ }) {
-                Icon(Icons.Default.Done, contentDescription = "ship")
-            }
-            IconButton(onClick = { /* Handle train */ }) {
-                Icon(Icons.Default.Done, contentDescription = "train")
-            }
-            IconButton(onClick = { /* Handle bus */ }) {
-                Icon(Icons.Default.Done, contentDescription = "bus")
-
+            IconButton(
+                onClick = { /* Handle train */ },
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MainGray)) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_ship),
+                        contentDescription = "Airplane",
+                        tint = Color.Black,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }            }
+            IconButton(
+                onClick = { /* Handle train */ },
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MainGray)) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_train),
+                        contentDescription = "Airplane",
+                        tint = Color.Black,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }            }
+            IconButton(
+                onClick = { /* Handle bus */ },
+                modifier = Modifier
+                    .size(56.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(MainGray)) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_bus),
+                        contentDescription = "Airplane",
+                        tint = Color.Black,
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
         }
     }
