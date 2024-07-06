@@ -101,9 +101,31 @@ fun FlightCount(onFilterPressed: () -> Unit) {
 
 @Composable
 fun FlightList(onFlightSelected: (Flight) -> Unit) {
-    val flights = List(5) {
-        Flight("New York", "London", "02 Jun", "9:00 AM", "$50", "NL-41")
-    }
+
+
+
+    val flights = listOf(
+        Flight("New York", "London", "2024-07-06", "09:30", "$650", "BA178"),
+        Flight("Tokyo", "Sydney", "2024-07-06", "23:45", "$780", "QF22"),
+        Flight("Paris", "Rome", "2024-07-07", "14:15", "$210", "AZ324"),
+        Flight("Dubai", "Singapore", "2024-07-07", "01:20", "$420", "EK404"),
+        Flight("Los Angeles", "Chicago", "2024-07-08", "11:05", "$320", "UA846"),
+        Flight("Berlin", "Moscow", "2024-07-08", "16:50", "$280", "SU2313"),
+        Flight("Mumbai", "Bangkok", "2024-07-09", "20:30", "$310", "TG318"),
+        Flight("São Paulo", "Buenos Aires", "2024-07-09", "08:45", "$390", "LA8012"),
+        Flight("Amsterdam", "Barcelona", "2024-07-10", "13:10", "$180", "VY8318"),
+        Flight("Hong Kong", "Seoul", "2024-07-10", "10:25", "$290", "KE608"),
+        Flight("Toronto", "Vancouver", "2024-07-11", "15:40", "$270", "AC118"),
+        Flight("Istanbul", "Athens", "2024-07-11", "07:55", "$160", "TK1845"),
+        Flight("Mexico City", "Cancun", "2024-07-12", "12:30", "$150", "AM824"),
+        Flight("Copenhagen", "Stockholm", "2024-07-12", "18:20", "$140", "SK1419"),
+        Flight("Cairo", "Dubai", "2024-07-13", "22:05", "$330", "MS916"),
+        Flight("Johannesburg", "Cape Town", "2024-07-13", "06:15", "$200", "SA317"),
+        Flight("Zurich", "Vienna", "2024-07-14", "09:50", "$170", "OS564"),
+        Flight("Dublin", "Edinburgh", "2024-07-14", "17:35", "$120", "EI3250"),
+        Flight("San Francisco", "Seattle", "2024-07-14", "14:00", "$190", "AS1532"),
+        Flight("Helsinki", "Oslo", "2024-07-14", "11:45", "$230", "AY913")
+    )
 
     LazyColumn {
         items(flights) { flight ->

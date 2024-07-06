@@ -385,7 +385,11 @@ fun TransportClass() {
 @Composable
 fun TransportType() {
     Column(modifier = Modifier.padding(vertical = 8.dp)) {
-        Text("Transport", style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
+        Text(
+            "Transport",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray,
+            modifier = Modifier.padding(4.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

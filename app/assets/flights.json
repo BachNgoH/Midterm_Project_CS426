@@ -1,0 +1,162 @@
+[
+  {
+    "origin": "New York",
+    "destination": "London",
+    "date": "2024-07-15",
+    "departure": "09:30",
+    "price": "$650",
+    "number": "BA178"
+  },
+  {
+    "origin": "Tokyo",
+    "destination": "Sydney",
+    "date": "2024-07-16",
+    "departure": "23:45",
+    "price": "$780",
+    "number": "QF22"
+  },
+  {
+    "origin": "Paris",
+    "destination": "Rome",
+    "date": "2024-07-17",
+    "departure": "14:15",
+    "price": "$210",
+    "number": "AZ324"
+  },
+  {
+    "origin": "Dubai",
+    "destination": "Singapore",
+    "date": "2024-07-18",
+    "departure": "01:20",
+    "price": "$420",
+    "number": "EK404"
+  },
+  {
+    "origin": "Los Angeles",
+    "destination": "Chicago",
+    "date": "2024-07-19",
+    "departure": "11:05",
+    "price": "$320",
+    "number": "UA846"
+  },
+  {
+    "origin": "Berlin",
+    "destination": "Moscow",
+    "date": "2024-07-20",
+    "departure": "16:50",
+    "price": "$280",
+    "number": "SU2313"
+  },
+  {
+    "origin": "Mumbai",
+    "destination": "Bangkok",
+    "date": "2024-07-21",
+    "departure": "20:30",
+    "price": "$310",
+    "number": "TG318"
+  },
+  {
+    "origin": "São Paulo",
+    "destination": "Buenos Aires",
+    "date": "2024-07-22",
+    "departure": "08:45",
+    "price": "$390",
+    "number": "LA8012"
+  },
+  {
+    "origin": "Amsterdam",
+    "destination": "Barcelona",
+    "date": "2024-07-23",
+    "departure": "13:10",
+    "price": "$180",
+    "number": "VY8318"
+  },
+  {
+    "origin": "Hong Kong",
+    "destination": "Seoul",
+    "date": "2024-07-24",
+    "departure": "10:25",
+    "price": "$290",
+    "number": "KE608"
+  },
+  {
+    "origin": "Toronto",
+    "destination": "Vancouver",
+    "date": "2024-07-25",
+    "departure": "15:40",
+    "price": "$270",
+    "number": "AC118"
+  },
+  {
+    "origin": "Istanbul",
+    "destination": "Athens",
+    "date": "2024-07-26",
+    "departure": "07:55",
+    "price": "$160",
+    "number": "TK1845"
+  },
+  {
+    "origin": "Mexico City",
+    "destination": "Cancun",
+    "date": "2024-07-27",
+    "departure": "12:30",
+    "price": "$150",
+    "number": "AM824"
+  },
+  {
+    "origin": "Copenhagen",
+    "destination": "Stockholm",
+    "date": "2024-07-28",
+    "departure": "18:20",
+    "price": "$140",
+    "number": "SK1419"
+  },
+  {
+    "origin": "Cairo",
+    "destination": "Dubai",
+    "date": "2024-07-29",
+    "departure": "22:05",
+    "price": "$330",
+    "number": "MS916"
+  },
+  {
+    "origin": "Johannesburg",
+    "destination": "Cape Town",
+    "date": "2024-07-30",
+    "departure": "06:15",
+    "price": "$200",
+    "number": "SA317"
+  },
+  {
+    "origin": "Zurich",
+    "destination": "Vienna",
+    "date": "2024-07-31",
+    "departure": "09:50",
+    "price": "$170",
+    "number": "OS564"
+  },
+  {
+    "origin": "Dublin",
+    "destination": "Edinburgh",
+    "date": "2024-08-01",
+    "departure": "17:35",
+    "price": "$120",
+    "number": "EI3250"
+  },
+  {
+    "origin": "San Francisco",
+    "destination": "Seattle",
+    "date": "2024-08-02",
+    "departure": "14:00",
+    "price": "$190",
+    "number": "AS1532"
+  },
+  {
+    "origin": "Helsinki",
+    "destination": "Oslo",
+    "date": "2024-08-03",
+    "departure": "11:45",
+    "price": "$230",
+    "number": "AY913"
+  }
+]
