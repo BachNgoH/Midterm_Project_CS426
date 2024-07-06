@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SeatSelectionView() {
+fun SeatSelectionView(
+    onBackPressed: () -> Unit,
+    flight: Flight
+) {
     var selectedSeat by remember { mutableStateOf("") }
     var totalPrice by remember { mutableStateOf(50.00) }
 
@@ -28,7 +31,7 @@ fun SeatSelectionView() {
             TopAppBar(
                 title = { Text("Select Seats") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back navigation */ }) {
+                    IconButton(onClick = onBackPressed) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }

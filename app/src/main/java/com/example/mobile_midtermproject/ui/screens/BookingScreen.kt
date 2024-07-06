@@ -13,7 +13,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mobile_midtermproject.R
+import com.example.mobile_midtermproject.ui.components.Flight
 import com.example.mobile_midtermproject.ui.components.FlightSearchView
+import com.example.mobile_midtermproject.ui.components.SeatSelectionView
 
 @Composable
 fun BookingsScreen() {
@@ -31,11 +33,21 @@ fun BookingsScreen() {
         )
         is BookingView.SearchDetails -> FlightSearchView(
             onBackPressed = { currentView = BookingView.TransportDetails },
-            onFilterPressed = { currentView = BookingView.Filter }
+            onFilterPressed = { currentView = BookingView.Filter },
+            onFlightSelected = {
+                flight -> currentView = BookingView.SeatSelection(flight)
+            }
         )
         is BookingView.Filter -> FilterView(
             onBackPressed = { currentView = BookingView.SearchDetails }
         )
+        is BookingView.SeatSelection -> {
+            val flight = (currentView as BookingView.SeatSelection).flight
+            SeatSelectionView(
+                flight = flight,
+                onBackPressed = { currentView = BookingView.SearchDetails }
+            )
+        }
         else -> {}
     }
 }
@@ -134,4 +146,5 @@ sealed class BookingView {
     object TransportDetails : BookingView()
     object SearchDetails: BookingView()
     object Filter : BookingView()
+    data class SeatSelection(val flight: Flight): BookingView()
 }

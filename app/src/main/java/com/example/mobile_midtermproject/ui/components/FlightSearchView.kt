@@ -1,5 +1,6 @@
 package com.example.mobile_midtermproject.ui.components
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -19,7 +20,11 @@ import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlightSearchView(onBackPressed: () -> Unit, onFilterPressed: () -> Unit) {
+fun FlightSearchView(
+    onBackPressed: () -> Unit,
+    onFilterPressed: () -> Unit,
+    onFlightSelected: (Flight) -> Unit
+) {
     Scaffold(
     topBar = {
         TopAppBar(
@@ -44,7 +49,7 @@ fun FlightSearchView(onBackPressed: () -> Unit, onFilterPressed: () -> Unit) {
         ) {
             CalendarView()
             FlightCount(onFilterPressed = onFilterPressed)
-            FlightList()
+            FlightList(onFlightSelected = onFlightSelected)
         }
     }
 }
@@ -94,24 +99,25 @@ fun FlightCount(onFilterPressed: () -> Unit) {
 }
 
 @Composable
-fun FlightList() {
+fun FlightList(onFlightSelected: (Flight) -> Unit) {
     val flights = List(5) {
         Flight("New York", "London", "02 Jun", "9:00 AM", "$50", "NL-41")
     }
 
     LazyColumn {
         items(flights) { flight ->
-            FlightCard(flight)
+            FlightCard(flight, onFlightSelected = { onFlightSelected(flight) })
         }
     }
 }
 
 @Composable
-fun FlightCard(flight: Flight) {
+fun FlightCard(flight: Flight, onFlightSelected: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .clickable(onClick = onFlightSelected),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
