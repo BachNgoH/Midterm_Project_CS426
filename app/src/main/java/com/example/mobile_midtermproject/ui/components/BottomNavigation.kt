@@ -17,7 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mobile_midtermproject.ui.screens.ProfileScreen
 import com.example.mobile_midtermproject.ui.theme.ActionColor
 
-
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation() {

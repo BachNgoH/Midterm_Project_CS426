@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 
 // Step 1: Define your custom font family
 val customFontFamily = FontFamily(
-    Font(R.font.poppins_black, FontWeight.Normal),
+    Font(R.font.poppins_regular, FontWeight.Normal),
     Font(R.font.poppins_medium, FontWeight.Medium),
     Font(R.font.poppins_bold, FontWeight.Bold)
 )

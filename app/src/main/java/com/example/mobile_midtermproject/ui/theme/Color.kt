@@ -14,3 +14,4 @@ val Pink40 = Color(0xFF7D5260)
 // App Color
 val PrimaryColor = Color(0xFF01635D)
 val ActionColor = Color(0xFFFFDDA2)
+val MainGray = Color(0xFFF5F5F5)

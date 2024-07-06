@@ -10,9 +10,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mobile_midtermproject.R
 
@@ -22,6 +24,12 @@ fun TransportDetailsView(
     onBackPressed: () -> Unit,
     onSearch: () -> Unit
 ) {
+    val cities = listOf("New York (NYC)", "London (LDN)", "Paris (PAR)", "Tokyo (TYO)", "Sydney (SYD)")
+    var fromCity by remember { mutableStateOf(cities[0]) }
+    var toCity by remember { mutableStateOf(cities[1]) }
+    var fromExpanded by remember { mutableStateOf(false) }
+    var toExpanded by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,9 +49,57 @@ fun TransportDetailsView(
         )
 
         Column(modifier = Modifier.padding(16.dp)) {
-            LocationField("From", "New York (NYC)")
-            LocationField("To", "London (LDN)")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CityDropdown(
+                    "From",
+                    fromCity,
+                    fromExpanded,
+                    cities,
+                    onExpandedChange = { fromExpanded = it },
+                    onCitySelected = {
+                        fromCity = it
+                        if (it == toCity) {
+                            toCity = cities.first { city -> city != it }
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
 
+                IconButton(
+                    onClick = {
+                        val temp = fromCity
+                        fromCity = toCity
+                        toCity = temp
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.swap_horizontal),
+                        contentDescription = "Switch locations",
+                        tint = Color(0xFFFFA500),
+                    )
+                }
+
+                CityDropdown(
+                    "To",
+                    toCity,
+                    toExpanded,
+                    cities,
+                    onExpandedChange = { toExpanded = it },
+                    onCitySelected = {
+                        toCity = it
+                        if (it == fromCity) {
+                            fromCity = cities.first { city -> city != it }
+                        }
+                    },
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            // Rest of the content...
             Row(modifier = Modifier.fillMaxWidth()) {
                 DateField("Departure", "Jun 02, 2022", Modifier.weight(1f))
                 Spacer(modifier = Modifier.width(16.dp))
@@ -51,9 +107,7 @@ fun TransportDetailsView(
             }
 
             PassengerAndLuggage()
-
             TransportClass()
-
             TransportType()
 
             Button(
@@ -69,23 +123,47 @@ fun TransportDetailsView(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LocationField(label: String, value: String) {
-    Column(modifier = Modifier.padding(vertical = 8.dp)) {
+fun CityDropdown(
+    label: String,
+    selectedCity: String,
+    expanded: Boolean,
+    cities: List<String>,
+    onExpandedChange: (Boolean) -> Unit,
+    onCitySelected: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier.padding(vertical = 8.dp)) {
         Text(label, style = MaterialTheme.typography.bodyMedium, color = Color.Gray)
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        ExposedDropdownMenuBox(
+            expanded = expanded,
+            onExpandedChange = onExpandedChange
         ) {
-            Text(value, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
-            Image(
-                painter = painterResource(id = R.drawable.ic_swap_vert),
-                contentDescription = "Swap locations",
-                modifier = Modifier.size(24.dp)
+            TextField(
+                value = selectedCity,
+                onValueChange = {},
+                readOnly = true,
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+                modifier = Modifier
+                    .menuAnchor()
+                    .fillMaxWidth()
             )
+            ExposedDropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { onExpandedChange(false) }
+            ) {
+                cities.forEach { city ->
+                    DropdownMenuItem(
+                        text = { Text(city) },
+                        onClick = {
+                            onCitySelected(city)
+                            onExpandedChange(false)
+                        }
+                    )
+                }
+            }
         }
-        Divider(modifier = Modifier.padding(top = 8.dp))
     }
 }
 
