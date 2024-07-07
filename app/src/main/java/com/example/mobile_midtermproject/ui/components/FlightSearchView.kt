@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-data class CalendarDate(val dayOfWeek: String, val dayOfMonth: String)
+data class CalendarDate(val dayOfWeek: String, val dayOfMonth: String, val date: String)
 
 @Composable
 fun HorizontalCalendarView(
@@ -89,7 +89,7 @@ fun FlightSearchView(
 ) {
     val dates = remember { getCurrentWeekDates() }
     var selectedDate by remember { mutableStateOf(dates[0]) }
-    var flightsByDate by remember { mutableStateOf(getFlightsForDate(selectedDate.dayOfMonth)) }
+    var flightsByDate by remember { mutableStateOf(getFlightsForDate(selectedDate.date)) }
 
     Scaffold(
         topBar = {
@@ -117,7 +117,7 @@ fun FlightSearchView(
                 dates = dates,
                 onDateSelected = { date ->
                     selectedDate = date
-                    flightsByDate = getFlightsForDate(date.dayOfMonth)
+                    flightsByDate = getFlightsForDate(date.date)
                 }
             )
             FlightCount(flightCount = flightsByDate.size, onFilterPressed = onFilterPressed)
@@ -131,12 +131,17 @@ fun getCurrentWeekDates(): List<CalendarDate> {
     calendar.firstDayOfWeek = Calendar.MONDAY
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
+    val dayOfWeekFormatter = SimpleDateFormat("EE", Locale.getDefault())
+    val dayOfMonthFormatter = SimpleDateFormat("dd", Locale.getDefault())
+    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
     return (0..6).map { dayOffset ->
         val date = calendar.time
-        val dayOfWeek = SimpleDateFormat("EE", Locale.getDefault()).format(date).uppercase()
-        val dayOfMonth = SimpleDateFormat("dd", Locale.getDefault()).format(date)
+        val dayOfWeek = dayOfWeekFormatter.format(date).uppercase()
+        val dayOfMonth = dayOfMonthFormatter.format(date)
+        val formattedDate = dateFormatter.format(date)
         calendar.add(Calendar.DAY_OF_MONTH, 1)
-        CalendarDate(dayOfWeek, dayOfMonth)
+        CalendarDate(dayOfWeek, dayOfMonth, formattedDate)
     }
 }
 
