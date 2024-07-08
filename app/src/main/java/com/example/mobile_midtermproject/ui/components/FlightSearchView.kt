@@ -150,7 +150,6 @@ fun FlightSearchView(
     }
 }
 
-
 fun applyFilters(flights: List<Flight>, filterState: FilterState): List<Flight> {
     return flights.filter { flight ->
         val departureHour = flight.departure.split(":")[0].toInt()
@@ -173,16 +172,20 @@ fun applyFilters(flights: List<Flight>, filterState: FilterState): List<Flight> 
         val inPriceRange = price in filterState.priceRange
 
         inDepartureRange && inArrivalRange && inPriceRange
-    }
-//        .sortedBy { flight ->
-//        when (filterState.selectedSortOption) {
-//            0 -> flight.departure
-//            1 -> flight.departure // Assuming arrival time is not available in the Flight data class
-//            2 -> flight.price.removePrefix("$").toFloat()
-//            3 -> flight.price.removePrefix("$").toFloat()
-//            else -> flight.departure
-//        }
-//    }
+    }.sortedWith(compareBy<Flight> { flight ->
+        when (filterState.selectedSortOption) {
+            0 -> flight.departure // Arrival time (using departure as a placeholder)
+            1 -> flight.departure // Departure time
+            2 -> flight.price.removePrefix("$").toFloat() // Price
+            3 -> flight.price.removePrefix("$").toFloat() // Lowest fare (same as price)
+            else -> flight.departure// Default to departure time
+        }
+    }.thenBy { flight ->
+        when (filterState.selectedSortOption) {
+            0, 1 -> flight.price.removePrefix("$").toFloat() // Secondary sort by price for time-based sorts
+            else -> flight.departure // Secondary sort by departure time for price-based sorts
+        }
+    })
 }
 
 fun getCurrentWeekDates(): List<CalendarDate> {
