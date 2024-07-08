@@ -1,4 +1,7 @@
 package com.example.mobile_midtermproject.ui.components
+import FilterState
+import FilterView
+import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -84,12 +87,20 @@ fun DateButton(
 @Composable
 fun FlightSearchView(
     onBackPressed: () -> Unit,
-    onFilterPressed: () -> Unit,
     onFlightSelected: (Flight) -> Unit
 ) {
     val dates = remember { getCurrentWeekDates() }
     var selectedDate by remember { mutableStateOf(dates[0]) }
-    var flightsByDate by remember { mutableStateOf(getFlightsForDate(selectedDate.date)) }
+    var allFlights by remember { mutableStateOf(getFlightsForDate(selectedDate.date)) }
+    var filteredFlights by remember { mutableStateOf(allFlights) }
+
+    var filterState by remember { mutableStateOf(FilterState(0, 0, 50f..250f, 2)) }
+    var showFilterView by remember { mutableStateOf(false) }
+
+    LaunchedEffect(filterState, selectedDate) {
+        allFlights = getFlightsForDate(selectedDate.date)
+        filteredFlights = applyFilters(allFlights, filterState)
+    }
 
     Scaffold(
         topBar = {
@@ -117,13 +128,61 @@ fun FlightSearchView(
                 dates = dates,
                 onDateSelected = { date ->
                     selectedDate = date
-                    flightsByDate = getFlightsForDate(date.date)
                 }
             )
-            FlightCount(flightCount = flightsByDate.size, onFilterPressed = onFilterPressed)
-            FlightList(flights = flightsByDate, onFlightSelected = onFlightSelected)
+            FlightCount(
+                flightCount = filteredFlights.size,
+                onFilterPressed = { showFilterView = true }
+            )
+            FlightList(flights = filteredFlights, onFlightSelected = onFlightSelected)
         }
     }
+
+    if (showFilterView) {
+        FilterView(
+            initialState = filterState,
+            onBackPressed = { showFilterView = false },
+            onApplyFilters = { newFilterState ->
+                filterState = newFilterState
+                showFilterView = false
+            }
+        )
+    }
+}
+
+
+fun applyFilters(flights: List<Flight>, filterState: FilterState): List<Flight> {
+    return flights.filter { flight ->
+        val departureHour = flight.departure.split(":")[0].toInt()
+        val price = flight.price.removePrefix("$").toFloat()
+
+        val inDepartureRange = when (filterState.departureTimeRange) {
+            0 -> departureHour in 0..5
+            1 -> departureHour in 6..11
+            2 -> departureHour in 12..17
+            else -> true
+        }
+
+        val inArrivalRange = when (filterState.arrivalTimeRange) {
+            0 -> departureHour in 0..5
+            1 -> departureHour in 6..11
+            2 -> departureHour in 12..17
+            else -> true
+        }
+
+        val inPriceRange = price in filterState.priceRange
+
+        inDepartureRange && inArrivalRange && inPriceRange
+    }
+//        .sortedBy { flight ->
+//        when (filterState.selectedSortOption) {
+//            0 -> flight.departure
+//            1 -> flight.departure // Assuming arrival time is not available in the Flight data class
+//            2 -> flight.price.removePrefix("$").toFloat()
+//            3 -> flight.price.removePrefix("$").toFloat()
+//            else -> flight.departure
+//        }
+//    }
 }
 
 fun getCurrentWeekDates(): List<CalendarDate> {

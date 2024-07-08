@@ -10,14 +10,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.mobile_midtermproject.ui.theme.PrimaryColor
+
+data class FilterState(
+    val departureTimeRange: Int,
+    val arrivalTimeRange: Int,
+    val priceRange: ClosedFloatingPointRange<Float>,
+    val selectedSortOption: Int
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FilterView(onBackPressed: () -> Unit) {
-    var departureTimeRange by remember { mutableStateOf(0) }
-    var arrivalTimeRange by remember { mutableStateOf(0) }
-    var priceRange by remember { mutableStateOf(50f..250f) }
-    var selectedSortOption by remember { mutableStateOf(2) } // Default to Price
+fun FilterView(
+    initialState: FilterState,
+    onBackPressed: () -> Unit,
+    onApplyFilters: (FilterState) -> Unit
+) {
+    var currentState by remember { mutableStateOf(initialState) }
 
     Scaffold(
         topBar = {
@@ -45,8 +54,8 @@ fun FilterView(onBackPressed: () -> Unit) {
             Text("Departure", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             TimeRangeSelector(
-                selectedIndex = departureTimeRange,
-                onSelectionChanged = { departureTimeRange = it }
+                selectedIndex = currentState.departureTimeRange,
+                onSelectionChanged = { currentState = currentState.copy(departureTimeRange = it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -54,8 +63,8 @@ fun FilterView(onBackPressed: () -> Unit) {
             Text("Arrival", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             TimeRangeSelector(
-                selectedIndex = arrivalTimeRange,
-                onSelectionChanged = { arrivalTimeRange = it }
+                selectedIndex = currentState.arrivalTimeRange,
+                onSelectionChanged = { currentState = currentState.copy(arrivalTimeRange = it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -63,8 +72,8 @@ fun FilterView(onBackPressed: () -> Unit) {
             Text("Price", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             PriceRangeSlider(
-                range = priceRange,
-                onRangeChange = { priceRange = it }
+                range = currentState.priceRange,
+                onRangeChange = { currentState = currentState.copy(priceRange = it) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -72,8 +81,8 @@ fun FilterView(onBackPressed: () -> Unit) {
             Text("Sort by", fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(8.dp))
             SortOptions(
-                selectedOption = selectedSortOption,
-                onOptionSelected = { selectedSortOption = it }
+                selectedOption = currentState.selectedSortOption,
+                onOptionSelected = { currentState = currentState.copy(selectedSortOption = it) }
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -83,14 +92,14 @@ fun FilterView(onBackPressed: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 OutlinedButton(
-                    onClick = { /* Reset filters */ },
+                    onClick = { currentState = initialState },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Reset")
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
-                    onClick = onBackPressed,
+                    onClick = { onApplyFilters(currentState) },
                     modifier = Modifier.weight(1f),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
                 ) {
@@ -114,7 +123,7 @@ fun TimeRangeSelector(selectedIndex: Int, onSelectionChanged: (Int) -> Unit) {
                 onClick = { onSelectionChanged(index) },
                 label = { Text(timeRange) },
                 colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = Color(0xFF006400),
+                    selectedContainerColor = PrimaryColor,
                     selectedLabelColor = Color.White
                 )
             )
@@ -130,8 +139,8 @@ fun PriceRangeSlider(range: ClosedFloatingPointRange<Float>, onRangeChange: (Clo
             onValueChange = onRangeChange,
             valueRange = 50f..250f,
             colors = SliderDefaults.colors(
-                thumbColor = Color(0xFF006400),
-                activeTrackColor = Color(0xFF006400)
+                thumbColor = PrimaryColor,
+                activeTrackColor = PrimaryColor
             )
         )
         Row(
@@ -157,7 +166,7 @@ fun SortOptions(selectedOption: Int, onOptionSelected: (Int) -> Unit) {
                     selected = selectedOption == index,
                     onClick = { onOptionSelected(index) },
                     colors = RadioButtonDefaults.colors(
-                        selectedColor = Color(0xFF006400)
+                        selectedColor = PrimaryColor
                     )
                 )
                 Spacer(modifier = Modifier.width(8.dp))

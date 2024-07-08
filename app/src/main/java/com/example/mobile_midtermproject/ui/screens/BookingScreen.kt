@@ -1,3 +1,5 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +21,7 @@ import com.example.mobile_midtermproject.ui.components.Flight
 import com.example.mobile_midtermproject.ui.components.FlightSearchView
 import com.example.mobile_midtermproject.ui.components.SeatSelectionView
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun BookingsScreen() {
@@ -36,14 +39,14 @@ fun BookingsScreen() {
         )
         is BookingView.SearchDetails -> FlightSearchView(
             onBackPressed = { currentView = BookingView.TransportDetails },
-            onFilterPressed = { currentView = BookingView.Filter },
+//            onFilterPressed = { currentView = BookingView.Filter },
             onFlightSelected = {
                 flight -> currentView = BookingView.SeatSelection(flight)
             }
         )
-        is BookingView.Filter -> FilterView(
-            onBackPressed = { currentView = BookingView.SearchDetails }
-        )
+//        is BookingView.Filter -> FilterView(
+//            onBackPressed = { currentView = BookingView.SearchDetails }
+//        )
         is BookingView.SeatSelection -> {
             val flight = (currentView as BookingView.SeatSelection).flight
             SeatSelectionView(
