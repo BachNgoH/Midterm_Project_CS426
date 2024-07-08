@@ -19,6 +19,7 @@ import com.example.mobile_midtermproject.R
 import com.example.mobile_midtermproject.ui.components.BoardingPassView
 import com.example.mobile_midtermproject.ui.components.Flight
 import com.example.mobile_midtermproject.ui.components.FlightSearchView
+import com.example.mobile_midtermproject.ui.components.Passenger
 import com.example.mobile_midtermproject.ui.components.SeatSelectionView
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,13 +53,17 @@ fun BookingsScreen() {
             SeatSelectionView(
                 flight = flight,
                 onBackPressed = { currentView = BookingView.SearchDetails },
-                onContinue = { flightSelected -> currentView = BookingView.Boarding(flightSelected) }
+                onContinue = {
+                    flightSelected, passengers -> currentView = BookingView.Boarding(flightSelected, passengers)
+                }
             )
         }
         is BookingView.Boarding -> {
             val flight = (currentView as BookingView.Boarding).flight
+            val passengers = (currentView as BookingView.Boarding).passengers
             BoardingPassView(
                 flight = flight,
+                passengers = passengers,
                 onBackPressed = { currentView = BookingView.SeatSelection(flight) }
             )
         }
@@ -161,5 +166,5 @@ sealed class BookingView {
     object SearchDetails: BookingView()
     object Filter : BookingView()
     data class SeatSelection(val flight: Flight): BookingView()
-    data class Boarding(val flight: Flight): BookingView()
+    data class Boarding(val flight: Flight, val passengers: List<Passenger>): BookingView()
 }

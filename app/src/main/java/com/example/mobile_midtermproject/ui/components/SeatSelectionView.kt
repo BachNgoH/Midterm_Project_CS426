@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 data class Passenger(
-    val name: String,
     val ticketNumber: String,
     val ticketClass: String,
     val seatNumber: String
@@ -29,10 +28,10 @@ data class Passenger(
 fun SeatSelectionView(
     onBackPressed: () -> Unit,
     flight: Flight,
-    onContinue: (flight: Flight) -> Unit,
+    onContinue: (Flight, List<Passenger>) -> Unit,
 ) {
-    var selectedSeat by remember { mutableStateOf("") }
-    var totalPrice by remember { mutableStateOf(50.00) }
+    var selectedSeats by remember { mutableStateOf(setOf<String>()) }
+    var totalPrice by remember { mutableStateOf(flight.price.removePrefix("$").toDouble()) }
 
     Scaffold(
         topBar = {
@@ -53,14 +52,38 @@ fun SeatSelectionView(
                 .padding(16.dp)
         ) {
             Text("Traveller", fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(16.dp))
             SeatLegend()
             Spacer(modifier = Modifier.height(16.dp))
-            SeatGrid(onSeatSelected = { seat ->
-                selectedSeat = seat
-                // Update price logic here
-            })
+            SeatGrid(
+                selectedSeats = selectedSeats,
+                onSeatSelected = { seat ->
+                    selectedSeats = if (seat in selectedSeats) {
+                        selectedSeats - seat
+                    } else {
+                        selectedSeats + seat
+                    }
+                    // Update price logic here if needed
+                    totalPrice = flight.price.removePrefix("$").toDouble() * selectedSeats.size
+                }
+            )
             Spacer(modifier = Modifier.weight(1f))
-            BottomInfo(selectedSeat, totalPrice, onContinue = { onContinue(flight) })
+            BottomInfo(
+                selectedSeats = selectedSeats,
+                totalPrice = totalPrice,
+                onContinue = {
+                    if (selectedSeats.isNotEmpty()) {
+                        val passengers = selectedSeats.map { seatNumber ->
+                            Passenger(
+                                ticketNumber = "TK${(1000..9999).random()}",
+                                ticketClass = "Economy",
+                                seatNumber = seatNumber
+                            )
+                        }
+                        onContinue(flight, passengers)
+                    }
+                }
+            )
         }
     }
 }
@@ -89,11 +112,14 @@ fun LegendItem(color: Color, text: String) {
 }
 
 @Composable
-fun SeatGrid(onSeatSelected: (String) -> Unit) {
+fun SeatGrid(
+    selectedSeats: Set<String>,
+    onSeatSelected: (String) -> Unit
+) {
     val seatStatus = remember {
         mutableStateMapOf(
             "A1" to SeatStatus.BOOKED, "B1" to SeatStatus.BOOKED,
-            "A2" to SeatStatus.SELECTED, "B2" to SeatStatus.AVAILABLE,
+            "A2" to SeatStatus.AVAILABLE, "B2" to SeatStatus.AVAILABLE,
             "C1" to SeatStatus.BOOKED, "D1" to SeatStatus.AVAILABLE,
             "C2" to SeatStatus.AVAILABLE, "D2" to SeatStatus.BOOKED
             // Add more seats as needed
@@ -113,11 +139,11 @@ fun SeatGrid(onSeatSelected: (String) -> Unit) {
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                SeatItem(seatStatus, "A${row + 1}", onSeatSelected)
-                SeatItem(seatStatus, "B${row + 1}", onSeatSelected)
+                SeatItem(seatStatus, "A${row + 1}", selectedSeats, onSeatSelected)
+                SeatItem(seatStatus, "B${row + 1}", selectedSeats, onSeatSelected)
                 Text("${row + 1}", modifier = Modifier.width(20.dp), textAlign = TextAlign.Center)
-                SeatItem(seatStatus, "C${row + 1}", onSeatSelected)
-                SeatItem(seatStatus, "D${row + 1}", onSeatSelected)
+                SeatItem(seatStatus, "C${row + 1}", selectedSeats, onSeatSelected)
+                SeatItem(seatStatus, "D${row + 1}", selectedSeats, onSeatSelected)
             }
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -130,13 +156,15 @@ enum class SeatStatus { AVAILABLE, BOOKED, SELECTED }
 fun SeatItem(
     seatStatus: MutableMap<String, SeatStatus>,
     seatNumber: String,
+    selectedSeats: Set<String>,
     onSeatSelected: (String) -> Unit
 ) {
     val status = seatStatus[seatNumber] ?: SeatStatus.AVAILABLE
-    val color = when (status) {
-        SeatStatus.AVAILABLE -> Color(0xFFE0E0E0)
-        SeatStatus.BOOKED -> Color(0xFF4CAF50)
-        SeatStatus.SELECTED -> Color(0xFFFFA500)
+    val isSelected = seatNumber in selectedSeats
+    val color = when {
+        isSelected -> Color(0xFFFFA500)
+        status == SeatStatus.BOOKED -> Color(0xFF4CAF50)
+        else -> Color(0xFFE0E0E0)
     }
 
     Box(
@@ -146,23 +174,24 @@ fun SeatItem(
             .background(color)
             .clickable(
                 enabled = status == SeatStatus.AVAILABLE,
-                onClick = {
-                    seatStatus[seatNumber] = SeatStatus.SELECTED
-                    onSeatSelected(seatNumber)
-                }
+                onClick = { onSeatSelected(seatNumber) }
             )
     )
 }
 
 @Composable
-fun BottomInfo(selectedSeat: String, totalPrice: Double, onContinue: () -> Unit) {
+fun BottomInfo(
+    selectedSeats: Set<String>,
+    totalPrice: Double,
+    onContinue: () -> Unit
+) {
     Column {
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Your seats")
-            Text("Traveller 1 / Seat $selectedSeat")
+            Text("Selected Seats")
+            Text("${selectedSeats.size} seat(s): ${selectedSeats.joinToString(", ")}")
         }
         Row(
             Modifier.fillMaxWidth(),
@@ -175,7 +204,8 @@ fun BottomInfo(selectedSeat: String, totalPrice: Double, onContinue: () -> Unit)
         Button(
             onClick = onContinue,
             modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500))
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFA500)),
+            enabled = selectedSeats.isNotEmpty()
         ) {
             Text("Continue")
         }

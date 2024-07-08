@@ -26,16 +26,13 @@ import com.example.mobile_midtermproject.R
 @Composable
 fun BoardingPassView(
     flight: Flight,
-//    passengers: List<Passenger>,
+    passengers: List<Passenger>,
     onBackPressed: () -> Unit
 ) {
-    var passengers = List<Passenger>(2) {
-        Passenger(name = "John Doe", ticketNumber = "AL100", ticketClass = "Economic", seatNumber = "15A")
-    }
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Boarding Pass") },
+                title = { Text("Boarding Passes") },
                 navigationIcon = {
                     IconButton(onClick = onBackPressed) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
@@ -55,10 +52,13 @@ fun BoardingPassView(
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
-            passengers.forEach { passenger ->
+            passengers.forEachIndexed { index, passenger ->
                 BoardingPass(flight, passenger)
-                Spacer(modifier = Modifier.height(24.dp))
+                if (index < passengers.size - 1) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
+            Spacer(modifier = Modifier.height(24.dp))
             DownloadTicketButton()
         }
     }
@@ -152,7 +152,7 @@ fun PassengerInfo(passenger: Passenger) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        FlightInfoColumn("Passenger", passenger.name)
+//        FlightInfoColumn("Passenger", passenger.name)
         FlightInfoColumn("Ticket", passenger.ticketNumber)
         FlightInfoColumn("Class", passenger.ticketClass)
         FlightInfoColumn("Seat", passenger.seatNumber)
