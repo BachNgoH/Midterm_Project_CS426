@@ -1,3 +1,5 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -14,9 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.mobile_midtermproject.ui.screens.ProfileScreen
 import com.example.mobile_midtermproject.ui.theme.ActionColor
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

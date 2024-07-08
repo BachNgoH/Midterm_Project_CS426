@@ -1,22 +1,12 @@
-package com.example.mobile_midtermproject.ui.screens
-
-import PersonalInformationScreen
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,21 +21,42 @@ import com.example.mobile_midtermproject.R
 @Composable
 fun ProfileScreen() {
     var currentView by remember { mutableStateOf<ProfileView>(ProfileView.Main) }
+    var userProfile by remember {
+        mutableStateOf(UserProfile("Victoria", "Yoker", "+380 12 345 67 89", "victoria.yoker@gmail.com"))
+    }
 
     when (currentView) {
-        is ProfileView.Main -> MainProfileScreen(onOptionSelected = { currentView = it })
-        is ProfileView.PersonalInfo -> PersonalInformationScreen(onBackClick = { currentView = ProfileView.Main })
+        is ProfileView.Main -> MainProfileScreen(
+            userProfile = userProfile,
+            onOptionSelected = { currentView = it },
+            onProfilePictureChange = { /* Handle profile picture change */ }
+        )
+        is ProfileView.PersonalInfo -> PersonalInformationScreen(
+            userProfile = userProfile,
+            onProfileUpdate = { updatedProfile ->
+                userProfile = updatedProfile
+                currentView = ProfileView.Main
+            },
+            onBackClick = { currentView = ProfileView.Main },
+            onProfilePictureChange = { /* Handle profile picture change */ }
+        )
+
+        else -> {}
     }
 }
 
 @Composable
-fun MainProfileScreen(onOptionSelected: (ProfileView) -> Unit) {
+fun MainProfileScreen(
+    userProfile: UserProfile,
+    onOptionSelected: (ProfileView) -> Unit,
+    onProfilePictureChange: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        AccountHeader()
+        AccountHeader(userProfile, onProfilePictureChange)
         Spacer(modifier = Modifier.height(24.dp))
         AccountOptions(onOptionSelected)
         Spacer(modifier = Modifier.weight(1f))
@@ -54,7 +65,7 @@ fun MainProfileScreen(onOptionSelected: (ProfileView) -> Unit) {
 }
 
 @Composable
-fun AccountHeader() {
+fun AccountHeader(userProfile: UserProfile, onProfilePictureChange: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -65,21 +76,33 @@ fun AccountHeader() {
         )
         Box(
             modifier = Modifier
-                .width(80.dp) // Set the width to clip
-                .aspectRatio(1f) // Maintain aspect ratio (1:1 for square shape)
+                .size(80.dp)
+                .clip(CircleShape)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.profile_picture),
                 contentDescription = "Profile Picture",
-                contentScale = ContentScale.Crop, // Crop to fill the box while preserving aspect ratio
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape) // Clip to circle shape
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
+//            IconButton(
+//                onClick = onProfilePictureChange,
+//                modifier = Modifier
+//                    .align(Alignment.BottomEnd)
+//                    .size(24.dp)
+//                    .clip(CircleShape)
+//                    .background(Color(0xFFFFA500))
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Edit,
+//                    contentDescription = "Change Profile Picture",
+//                    tint = Color.White
+//                )
+//            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Victoria Yoker",
+            text = "${userProfile.firstName} ${userProfile.lastName}",
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold)
         )
     }
@@ -88,11 +111,12 @@ fun AccountHeader() {
 @Composable
 fun AccountOptions(onOptionSelected: (ProfileView) -> Unit) {
     AccountOption(Icons.Default.Person, "Personal information") { onOptionSelected(ProfileView.PersonalInfo) }
-    AccountOption(Icons.Default.ShoppingCart, "Payment and cards") { onOptionSelected(ProfileView.PersonalInfo) }
-    AccountOption(Icons.Default.Favorite, "Saved") { onOptionSelected(ProfileView.PersonalInfo) }
-    AccountOption(Icons.Default.AccountBox, "Booking history") { onOptionSelected(ProfileView.PersonalInfo) }
-    AccountOption(Icons.Default.Settings, "Settings") { onOptionSelected(ProfileView.PersonalInfo) }
+    AccountOption(Icons.Default.ShoppingCart, "Payment and cards") { /* Handle other options */ }
+    AccountOption(Icons.Default.Favorite, "Saved") { /* Handle other options */ }
+    AccountOption(Icons.Default.AccountBox, "Booking history") { /* Handle other options */ }
+    AccountOption(Icons.Default.Settings, "Settings") { /* Handle other options */ }
 }
+
 @Composable
 fun AccountOption(icon: ImageVector, text: String, onClick: () -> Unit) {
     Row(
